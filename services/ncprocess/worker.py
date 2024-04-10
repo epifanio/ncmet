@@ -45,7 +45,7 @@ from jsonschema import ValidationError, validate
 #
 
 download_dir = os.environ["DOWNLOAD_DIR"]
-api_host = os.environ["API_HOST"]
+api_host = os.environ["PROCESSING_ENDPOINT"]
 
 
 celery = Celery(__name__)
@@ -219,7 +219,8 @@ def compress(data, transaction_id):
     zip_file.close()
     env = Environment(loader=FileSystemLoader("""/app/templates"""))
     template = env.get_template("download/mail_download.html")
-    url = f"https://{api_host}/api/download/{download_token}"
+    # FIX ME
+    url = f"{api_host}/download/{download_token}"
     output = template.render(data=data, date=dt.datetime.now().isoformat(), url=url)
     data["download_url"] = url
     transaction_id_data = transaction_id + "_data"
