@@ -3,11 +3,11 @@
 {% block content %}
 
 <br>
-// here instead of a direct link to download the resource i should point the user to an api method with fileresponse
-// this way i can detect if the file is expired or not
-// and act as we want, even removing the file if needed
-// the important is that after expiration the file is no longer downloadable
-// means I should avoid using the static file mount for the download directory 
+<!--here instead of a direct link to download the resource i should point the user to an api method with fileresponse 
+this way i can detect if the file is expired or not 
+and act as we want, even removing the file if needed 
+the important is that after expiration the file is no longer downloadable 
+ means I should avoid using the static file mount for the download directory --> 
 <h1>
     <a href={{ url_for('download', path='/' ) }}{{id}} download><b>Download</b></a>
 </h1>
