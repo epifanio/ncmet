@@ -10,7 +10,7 @@ import redis
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="/usr/src/app/templates")
+templates = Jinja2Templates(directory="/app/templates")
 
 redis_client = redis.StrictRedis(host='redis', port=6379, db=0)  # Create a Redis client
 
