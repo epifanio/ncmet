@@ -73,6 +73,7 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DOWNLOAD_DIR=/app/data
+      - PROCESSING_ENDPOINT=http://api:80
     command: celery -A worker.celery worker --loglevel=info --logfile=logs/celery.log
     depends_on:
       - redis
@@ -111,6 +112,7 @@ services:
       - REDIS_PASSWORD='FGX0Im8cROKpFpHPOP8FETmOpLPsiLwEnHHXprOgn2AR7r7cGp'
       - UI_HOST=hvplot.wps.met.no
       - API_HOST=api.wps.met.no
+      - PROCESSING_ENDPOINT=http://api:80
       - DOWNLOAD_DIR=/app/data
     volumes:
       - ./services/ncprocess:/app
