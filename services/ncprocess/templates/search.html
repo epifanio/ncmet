@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSW Search</title>
+    <!-- Include Leaflet CSS file from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Include search CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/search.css' ) }}">
+</head>
+<body>
+    <!-- Placeholder for the map -->
+    <div id="map" style="height: 400px;"></div>
+    <!-- Form with various inputs -->
+    <form id="data-form">
+        <div class="form-container">
+            <h2>Enter Data</h2>
+            <div class="form-row">
+            <!-- Text entry -->
+                <div class="form-input">
+                    <label for="text-entry">Text Entry:</label><br>
+                    <input type="text" id="text-entry" name="text_entry">
+                </div>
+
+            <!-- Start Time -->
+            <div class="form-input">
+                <label for="start-time">Start Time:</label><br>
+                <input type="datetime-local" id="start-time" name="start_time">
+            </div>
+
+            <!-- End Time -->
+            <div class="form-input">
+                <label for="end-time">End Time:</label><br>
+                <input type="datetime-local" id="end-time" name="end_time">
+            </div>
+
+            <!-- Input for keywords -->
+            <div class="form-input">
+                <label for="keywords">Keywords:</label><br>
+                <input type="text" id="keywords" name="keywords" style="width: 60%;">
+                <button type="button" onclick="addKeyword()" class="form-button" style="width: 35%;">Add Keyword</button>
+            </div>
+
+            <!-- Display added keywords -->
+            <div class="form-input full-width">
+                <label for="added-keywords">Added Keywords:</label><br>
+                <ul id="added-keywords"></ul>
+                <input type="hidden" id="keywords-list" name="keywordslist">
+            </div>
+
+            <!-- Hidden input for bounding box -->
+            <input type="hidden" id="bbox" name="bbox">
+
+            <!-- Submit Button -->
+            <div class="form-input full-width">
+                <button type="button" onclick="handleFormSubmission()">Submit</button>
+            </div>
+            <!--
+            <div class="form-input full-width">
+                <button type="button" onclick="toggleForm()">Submit</button>
+            </div>
+            -->
+        </div>
+    </form>
+
+    <!-- Include Leaflet JavaScript file from CDN -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- JavaScript code to handle inpiut forms-->
+    <script src="{{ url_for('static', path='/js/search.js' ) }}"></script>
+     <!--
+    <script>
+        function toggleForm() {
+            console.log('toggling form');    
+        }
+    </script>
+    -->
+
+</body>
+</html>

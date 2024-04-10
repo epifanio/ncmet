@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Status</title>
+    <script>
+        var taskStatus = ""; // Define a variable to store task status
+        var intervalId; // Define a variable to store the interval ID
+        
+        function fetchTaskStatus() {
+            fetch("/tasks/{{ task_id }}")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    taskStatus = data.task_status; // Update task status variable
+                    updateTaskStatus(data); // Call function to update DOM with task status and additional HTML
+                })
+                .catch(error => console.error('Error fetching task status:', error));
+        }
+
+        function updateTaskStatus(data) {
+            var statusElement = document.getElementById("task-status");
+            statusElement.innerText = taskStatus; // Update DOM with task status
+
+            // Change text color based on task status
+            if (taskStatus === 'SUCCESS') {
+                statusElement.style.color = 'green'; // Green color for success
+                
+                // Render additional HTML for success
+                var successDiv = document.getElementById("success-message");
+                successDiv.innerHTML = '<span>Task completed successfully!</span>';
+
+                // Add task_result to a new div if task_status is SUCCESS
+                var resultDiv = document.createElement('div');
+                resultDiv.innerHTML = '<h2>Task Result</h2><pre>' + JSON.stringify(data.task_data, null, 2) + '</pre>';
+                document.body.appendChild(resultDiv);
+
+                // Stop fetching task status
+                clearInterval(intervalId);
+            } else if (taskStatus === 'FAILURE') {
+                statusElement.style.color = 'red'; // Red color for failure
+
+                // Render additional HTML for failure
+                statusElement.innerHTML += '<br><span>Task failed. Please try again later.</span>';
+            } else {
+                statusElement.style.color = 'black'; // Default color for other statuses
+            }
+        }
+
+        intervalId = setInterval(fetchTaskStatus, 5000); // Fetch task status every 5 seconds (adjust as needed)
+        window.onload = fetchTaskStatus; // Fetch task status when the page loads
+    </script>
+</head>
+<body>
+    <h1>Task Status</h1>
+    <p>Task ID: {{ task_id }}</p>
+    <p>Status: <span id="task-status"></span></p>
+
+    <div id="success-message"></div>
+</body>
+</html>

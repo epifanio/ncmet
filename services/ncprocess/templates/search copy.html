@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Placeholder</title>
+    <!-- Include Leaflet CSS file from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Style the form inputs */
+        .form-input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Placeholder for the map -->
+    <div id="map" style="height: 400px;"></div>
+
+    <!-- Form with various inputs -->
+    <form id="data-form">
+        <!-- Text entry -->
+        <div class="form-input">
+            <label for="text-entry">Text Entry:</label><br>
+            <input type="text" id="text-entry" name="text-entry">
+        </div>
+
+        <!-- Start Time -->
+        <div class="form-input">
+            <label for="start-time">Start Time:</label><br>
+            <input type="datetime-local" id="start-time" name="start-time">
+        </div>
+
+        <!-- End Time -->
+        <div class="form-input">
+            <label for="end-time">End Time:</label><br>
+            <input type="datetime-local" id="end-time" name="end-time">
+        </div>
+
+        <!-- Input for keywords -->
+        <div class="form-input">
+            <label for="keywords">Keywords:</label><br>
+            <input type="text" id="keywords" name="keywords">
+            <button type="button" onclick="addKeyword()">Add Keyword</button>
+        </div>
+
+        <!-- Display added keywords -->
+        <div class="form-input">
+            <label for="added-keywords">Added Keywords:</label><br>
+            <ul id="added-keywords"></ul>
+            <input type="hidden" id="keywords-list" name="keywords-list">
+        </div>
+
+        <!-- Hidden input for bounding box -->
+        <input type="hidden" id="bbox" name="bbox">
+
+        <!-- Submit Button -->
+        <div class="form-input">
+            <button type="button" onclick="handleFormSubmission()">Submit</button>
+        </div>
+    </form>
+
+    <!-- Include Leaflet JavaScript file from CDN -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Your JavaScript code -->
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        // Add a tile layer to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add a marker to the map
+        L.marker([51.5, -0.09]).addTo(map)
+            .bindPopup('A sample marker!')
+            .openPopup();
+
+        var addedKeywords = [];
+
+        // Function to add a keyword to the list
+        function addKeyword() {
+            var keywordInput = document.getElementById('keywords');
+            var keyword = keywordInput.value.trim();
+
+            if (keyword) {
+                addedKeywords.push(keyword);
+                keywordInput.value = '';
+
+                // Update the list of added keywords
+                var addedKeywordsList = document.getElementById('added-keywords');
+                var listItem = document.createElement('li');
+                listItem.textContent = keyword;
+                addedKeywordsList.appendChild(listItem);
+
+                // Update the hidden input with the list of keywords
+                document.getElementById('keywords-list').value = JSON.stringify(addedKeywords);
+            }
+        }
+
+        // Function to handle form submission
+        function handleFormSubmission() {
+            // Get the bounding box of the current map extent
+            var bounds = map.getBounds();
+            var bbox = [bounds.getSouthWest().lng, bounds.getSouthWest().lat, bounds.getNorthEast().lng, bounds.getNorthEast().lat].join(',');
+
+            // Set the value of the hidden input field
+            document.getElementById('bbox').value = bbox;
+
+            // Print the form data to the console
+            var formData = new FormData(document.getElementById('data-form'));
+            var data = {};
+            formData.forEach(function(value, key){
+                data[key] = value;
+            });
+            console.log(data);
+        }
+    </script>
+</body>
+</html>

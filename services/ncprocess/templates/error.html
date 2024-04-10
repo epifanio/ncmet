@@ -1,0 +1,30 @@
+{% extends "shared/base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Page</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='/css/error.css') }}">
+</head>
+<body>
+  <div class="error-container">
+    <h1 class="error-message">Oops! Something went wrong.</h1>
+    <button onclick="toggleErrorDetails()">Show Details</button>
+    <div id="error-details" class="hidden">
+        <h2>Error Details</h2>
+        <p><b>Item ID:</b> {{id}}</p>
+      <p><b>Traceback:</b> <br> {{error}}</p>
+    </div>
+  </div>
+
+  <script>
+    function toggleErrorDetails() {
+      var errorDetails = document.getElementById('error-details');
+      errorDetails.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
+{% endblock %}

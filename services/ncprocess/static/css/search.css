@@ -1,0 +1,94 @@
+/* Style the form container */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Style the form inputs */
+.form-input {
+    margin-bottom: 10px;
+}
+
+/* Style the form button */
+.form-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style the form button on hover */
+.form-button:hover {
+    background-color: #45a049;
+}
+
+/* Style the form button on focus */
+.form-button:focus {
+    outline: none;
+}
+
+/* Style the keyword list */
+.keyword-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style the keyword list items */
+.keyword-list li {
+    margin-bottom: 5px;
+}
+
+/* Style the remove button */
+.remove-button {
+    cursor: pointer;
+    float: right;
+    color: #999;
+}
+
+/* Style the remove button on hover */
+.remove-button:hover {
+    color: #333;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#toggle-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 999;
+}
+
+#sidebar {
+    height: 100%;
+    width: 300px;
+    position: fixed;
+    top: 0;
+    left: -300px; /* Initially hide the sidebar */
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+    padding-top: 20px;
+    border-right: 1px solid #ccc;
+    transition: left 0.3s ease;
+}
+
+#map-container {
+    height: 100%;
+    margin-left: 0; /* Initially map takes full width */
+    transition: margin-left 0.3s ease;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
