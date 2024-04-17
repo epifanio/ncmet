@@ -25,4 +25,4 @@ else
 fi
 
 # Start Uvicorn with live reload
-exec uvicorn --reload --proxy-headers --host $HOST --port $PORT --log-level $LOG_LEVEL "$APP_MODULE"
+exec uvicorn --reload --proxy-headers --forwarded_allow_ips '157.249.72.160' --host $HOST --port $PORT --log-level $LOG_LEVEL "$APP_MODULE"
