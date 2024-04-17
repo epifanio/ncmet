@@ -2,17 +2,17 @@ version: '3.8'
 
 services:
   hvplot:
-    image: epinux/hvplot:latest
+    image: epinux/holoviz:latest
     build:
       context: ./docker/hvplot
     environment:
-      BOKEH_ALLOW_WS_ORIGIN: 'api.wps.met.no,hvplot.wps.met.no,metsis-staging.met.no,157.249.73.143'
+      BOKEH_ALLOW_WS_ORIGIN: '*'
       PORT: '7777'
       LOG_LEVEL: 'debug'
       BOKEH_LOG_LEVEL: 'debug'
       PYTHONUNBUFFERED: 1
       TSPLOT_DOWNLOAD: "/app/static/Download"
-      PROCESSING_ENDPOINT: 'http://api:80'
+      PROCESSING_ENDPOINT: 'https://api.wps.met.no'
       DOWNLOAD_ENDPOINT: 'https://api.wps.met.no'
     ports:
       - 7777:7777
@@ -56,32 +56,28 @@ services:
     volumes:
       # - ./services/ui:/app
       - ./services/hvplot:/app
-      - ./docker/hvplot/entrypoint.sh:/entrypoint.sh
-    entrypoint: /entrypoint.sh
+      - ./docker/hvplot/entrypoint.sh:/home/user/venv/bin/entrypoint.sh
+    entrypoint: /home/user/venv/bin/entrypoint.sh
 
-  # rabbit:
-  #   image: rabbitmq:latest
-  #   # ports:
-  #   #   - 5672:5672
-  #   hostname: rabbit
-  #   networks:
-  #     - net 
+
 
   worker:
-    image: epinux/ncmet-api:latest
+    image: epinux/ncprocess
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DOWNLOAD_DIR=/app/data
-      - PROCESSING_ENDPOINT=http://api:80
-    command: celery -A worker.celery worker --loglevel=info --logfile=logs/celery.log
+      - PROCESSING_ENDPOINT=https://api.wps.met.no
+    working_dir: /app
+    command: celery -A worker.celery worker --loglevel=info --logfile=/home/user/celery.log
     depends_on:
       - redis
       - api
     volumes:
       - ./services/ncprocess:/app
-      - ./logs/celery/celery.log:/logs/celery.log
-      - download-data:/app/data
+      - ./logs/celery/celery.log:/home/user/celery.log
+      - ./data/:/app/data
+      # - download-data:/app/data
     networks:
       - net
       - traefik-public
@@ -102,7 +98,7 @@ services:
     hostname: redis
 
   api:
-    image: epinux/ncmet-api:latest
+    image: epinux/ncprocess
     build:
       context: ./docker/api
     environment:
@@ -112,11 +108,13 @@ services:
       - REDIS_PASSWORD='FGX0Im8cROKpFpHPOP8FETmOpLPsiLwEnHHXprOgn2AR7r7cGp'
       - UI_HOST=hvplot.wps.met.no
       - API_HOST=api.wps.met.no
-      - PROCESSING_ENDPOINT=http://api:80
+      - PROCESSING_ENDPOINT=https://api.wps.met.no
       - DOWNLOAD_DIR=/app/data
+    working_dir: /
     volumes:
       - ./services/ncprocess:/app
-      - download-data:/app/data
+      - ./data/:/app/data
+      # - download-data:/app/data
     # ports:
     #   - 8000:80
     hostname: api
