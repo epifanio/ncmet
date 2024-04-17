@@ -31,6 +31,18 @@ from api import search
 from api import nc_api
 
 
+import os
+
+download_dir = os.getenv("DOWNLOAD_DIR")
+
+if download_dir:
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
+        print(f"Created directory: {download_dir}")
+    else:
+        print(f"Directory already exists: {download_dir}")
+else:
+    print("DOWNLOAD_DIR environment variable not set.")
 
 
 logging.getLogger('passlib').setLevel(logging.ERROR)
@@ -40,6 +52,9 @@ app = FastAPI(
     description="Prototype API to process NetCDF Data",
     version="0.0.1",
 )
+
+
+
 
 favicon_path = 'favicon.ico'
 
@@ -63,7 +78,7 @@ def configure():
     
 def configure_routing():    
     app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-    app.mount("/download", StaticFiles(directory="/app/data"), name="download")
+    app.mount("/download", StaticFiles(directory=download_dir), name="download")
     app.include_router(celery_task.router)
     app.include_router(sse.router)
     app.include_router(download.router)

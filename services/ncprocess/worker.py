@@ -48,6 +48,18 @@ download_dir = os.environ["DOWNLOAD_DIR"]
 api_host = os.environ["PROCESSING_ENDPOINT"]
 
 
+download_dir = os.getenv("DOWNLOAD_DIR")
+
+if download_dir:
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
+        print(f"Created directory: {download_dir}")
+    else:
+        print(f"Directory already exists: {download_dir}")
+else:
+    print("DOWNLOAD_DIR environment variable not set.")
+    
+
 celery = Celery(__name__)
 celery.conf.broker_url = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379")
 celery.conf.result_backend = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379")
