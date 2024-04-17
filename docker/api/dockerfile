@@ -6,7 +6,21 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y apt-utils  build-essential git python3.10-venv python3.10-dev libpython3.10-dev
 
-ENV VIRTUAL_ENV=/opt/venv
+COPY ./start.sh /start.sh
+RUN chmod +x /start.sh
+
+COPY ./gunicorn_conf.py /gunicorn_conf.py
+
+COPY ./start-reload.sh /start-reload.sh
+RUN chmod +x /start-reload.sh
+
+WORKDIR /app
+RUN useradd -ms /bin/bash user
+COPY ./app /app
+RUN chown -R user:user /app
+USER user
+
+ENV VIRTUAL_ENV=/home/user/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
@@ -16,17 +30,6 @@ RUN pip install -U pip
 RUN pip install -r requirements.txt
 # RUN pip install git+https://github.com/bokeh/ipywidgets_bokeh
 
-COPY ./start.sh /start.sh
-RUN chmod +x /start.sh
-
-COPY ./gunicorn_conf.py /gunicorn_conf.py
-
-COPY ./start-reload.sh /start-reload.sh
-RUN chmod +x /start-reload.sh
-
-COPY ./app /app
-
-ENV NCPLOTDIR /opt/ncplot/
 
 WORKDIR /
 
