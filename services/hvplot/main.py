@@ -185,7 +185,10 @@ def plot(var, title=None):
     if featureType == 'timeSeries':
         var_coord = [i for i in ds.coords if ds.coords.dtypes[i] == np.dtype('<M8[ns]')]
         frequency_selector.visible = True
-        axis_arguments = {'y': ds[var], 'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
+        # removing 'y': ds[var], from the axis_arguments dictionary
+        # to bypass the error described in the following github issue
+        # https://github.com/holoviz/hvplot/issues/1325
+        axis_arguments = {'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
     if featureType and featureType != "timeSeries":
         frequency_selector.visible = False
         axis_arguments = {'x': ds[var], 'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
