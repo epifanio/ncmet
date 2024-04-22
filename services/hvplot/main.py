@@ -65,11 +65,13 @@ print("++++++++++++++++++++++++ +++++++ ++++++++++++++++++++++++++++++++++++")
 #       keep track of the nc_url and the error message
 
 try:
-    ds = xr.open_dataset(str(nc_url).strip())
+    ds_raw = xr.open_dataset(str(nc_url).strip())
+    ds = ds_raw.where(ds_raw != 9.96921e36)  
     decoded_time=True
 except ValueError as e:
     print(e)
-    ds = xr.open_dataset(str(nc_url).strip(), decode_times=False)
+    ds_raw = xr.open_dataset(str(nc_url).strip(), decode_times=False)
+    ds = ds_raw.where(ds_raw != 9.96921e36) 
     decoded_time=False
 except OSError as e:
     raw_data = Div(text=f"""<b>ValueError</b><br><br> Can't load dataset from {nc_url} """)
