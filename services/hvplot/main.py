@@ -184,13 +184,26 @@ def plot(var, title=None):
         featureType = ds.attrs['featureType']
     else:
         featureType = None
+    is_monotonic = False
     if featureType == 'timeSeries':
         var_coord = [i for i in ds.coords if ds.coords.dtypes[i] == np.dtype('<M8[ns]')]
-        frequency_selector.visible = True
+        coords_values = ds.coords[var_coord[0]].values[::-1]
+        is_monotonic = all(coords_values[i] <= coords_values[i + 1] for i in range(len(coords_values) - 1)) or all(coords_values[i] >= coords_values[i + 1] for i in range(len(coords_values) - 1))
+        if is_monotonic:
+            frequency_selector.visible = True
+        else:
+            frequency_selector.visible = False
         # removing 'y': ds[var], from the axis_arguments dictionary
         # to bypass the error described in the following github issue
         # https://github.com/holoviz/hvplot/issues/1325
         axis_arguments = {'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
+        if is_monotonic and frequency_selector.value != "--":
+            print('data resampling requested')
+            resampling_freq = {var_coord[0]: pandas_frequency_offsets[frequency_selector.value]}
+            plot_widget = ds[var].resample(**resampling_freq).mean().hvplot.line(**axis_arguments)
+        else:
+            plot_widget =  ds[var].hvplot.line(**axis_arguments)
+        return plot_widget
     if featureType and featureType != "timeSeries":
         frequency_selector.visible = False
         axis_arguments = {'x': ds[var], 'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
