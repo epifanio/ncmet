@@ -4,3 +4,5 @@ __pycache__/
 *.rdb
 services/ncprocess/__pycache__/
 services/hvplot/__pycache__/
+data/
+
