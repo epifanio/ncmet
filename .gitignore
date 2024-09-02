@@ -2,7 +2,7 @@
 *.pyc
 __pycache__/
 *.rdb
-services/ncprocess/__pycache__/*.pyc
-services/hvplot/__pycache__/*.pyc
+./services/ncprocess/__pycache__/*.pyc
+./services/hvplot/__pycache__/*.pyc
 data/
 
