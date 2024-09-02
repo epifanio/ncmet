@@ -2,7 +2,14 @@
 *.pyc
 __pycache__/
 *.rdb
-./services/ncprocess/__pycache__/*.pyc
-./services/hvplot/__pycache__/*.pyc
+services/ncprocess/__pycache__/
+services/ncprocess/api/__pycache__/
+services/ncprocess/models/__pycache__/
+services/hvplot/__pycache__/
+
+
 data/
 
+logs/celery/celery.log
+services/ncprocess/__pycache__/main.cpython-310.pyc
+services/ncprocess/redis_data/data/dump.rdb
