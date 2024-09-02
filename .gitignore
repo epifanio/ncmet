@@ -2,10 +2,10 @@
 *.pyc
 __pycache__/
 *.rdb
-services/ncprocess/__pycache__/
-services/ncprocess/api/__pycache__/
-services/ncprocess/models/__pycache__/
-services/hvplot/__pycache__/
+services/ncprocess/__pycache__/*.pyc
+services/ncprocess/api/__pycache__/*.pyc
+services/ncprocess/models/__pycache__/*.pyc
+services/hvplot/__pycache__/*.pyc
 
 
 data/
