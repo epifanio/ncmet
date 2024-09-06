@@ -33,3 +33,4 @@ python-multipart
 pylint
 pycodestyle
 black
+setuptools
