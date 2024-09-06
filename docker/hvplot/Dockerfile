@@ -1,10 +1,10 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 LABEL maintainer="massimods@met.no"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y apt-utils  build-essential git python3.10-venv python3.10-dev libpython3.10-dev libnetcdf-dev
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y apt-utils  build-essential git python3-venv python3-dev libpython3-dev libnetcdf-dev
 
 WORKDIR /app
 RUN useradd -ms /bin/bash user
