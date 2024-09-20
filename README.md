@@ -13,3 +13,5 @@ Implmements:
 A User Interface to plot Time Series, Profiles and Time Series Profiles datasource via OpenDAP URL
 The user interface and plotting are based on Panel, and Holoviews 
 
+## Licenses
+GPL 3 or higher for software, Creative Commons BY for documents.
