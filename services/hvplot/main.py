@@ -33,7 +33,7 @@ from bokeh.layouts import column, Spacer
 
 from jinja2 import Environment, FileSystemLoader
 
-env = Environment(loader=FileSystemLoader('/app/static'))
+env = Environment(loader=FileSystemLoader('/hvplot/static'))
 
 pn.param.ParamMethod.loading_indicator = True
 
@@ -82,13 +82,13 @@ print("++++++++++++++++++++++++ +++++++ ++++++++++++++++++++++++++++++++++++")
 #       keep track of the nc_url and the error message
 
 try:
-    ds_raw = xr.open_dataset(str(nc_url).strip())
-    ds = ds_raw.where(ds_raw != 9.96921e36)  
+    ds = xr.open_dataset(str(nc_url).strip())
+    #ds = ds_raw.where(ds_raw != 9.96921e36)  
     decoded_time=True
 except ValueError as e:
     print(e)
-    ds_raw = xr.open_dataset(str(nc_url).strip(), decode_times=False)
-    ds = ds_raw.where(ds_raw != 9.96921e36) 
+    ds = xr.open_dataset(str(nc_url).strip(), decode_times=False)
+    #ds = ds_raw.where(ds_raw != 9.96921e36) 
     decoded_time=False
 except OSError as e:
     raw_data = Div(text=f"""<b>ValueError</b><br><br> Can't load dataset from {nc_url} """)
@@ -116,6 +116,8 @@ except OSError as e:
 # the code below could go into a method, if time is detected as a coordinate
 # then the frequency selector should be added to the sidebar
 # if time is not detected as a coordinate then the frequency selector should not be added to the sidebar
+
+
 if ds.attrs['featureType'] == 'timeSeries':
     var_coord = [i for i in ds.coords if ds.coords.dtypes[i] == np.dtype('<M8[ns]')]
     time_coord = True
@@ -218,21 +220,23 @@ def plot(var, title=None):
         if is_monotonic and frequency_selector.value != "--":
             print('data resampling requested')
             resampling_freq = {var_coord[0]: pandas_frequency_offsets[frequency_selector.value]}
-            plot_widget = ds[var].resample(**resampling_freq).mean().hvplot.line(**axis_arguments)
+            # .where(ds_raw != 9.96921e36)
+            plot_widget = ds[var].where(ds[var] != 9.96921e36).resample(**resampling_freq).mean().hvplot.line(**axis_arguments)
         else:
-            plot_widget =  ds[var].hvplot.line(**axis_arguments)
+            # .where(ds_raw != 9.96921e36)
+            plot_widget =  ds[var].where(ds[var] != 9.96921e36).hvplot.line(**axis_arguments)
         return plot_widget
     if featureType and featureType != "timeSeries":
         frequency_selector.visible = False
         axis_arguments = {'x': ds[var], 'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
     try:
-        plot_widget =  ds[var].hvplot.line(**axis_arguments)
+        plot_widget =  ds[var].where(ds[var] != 9.96921e36).hvplot.line(**axis_arguments)
     except TypeError:
         axis_arguments = {'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
-        plot_widget =  ds[var].hvplot.line(**axis_arguments)
+        plot_widget =  ds[var].where(ds[var] != 9.96921e36).hvplot.line(**axis_arguments)
     except ValueError:
         axis_arguments = {'x': var, 'grid':True, 'title': title, 'widget_location': 'bottom', 'responsive': True}
-        plot_widget =  ds[var].hvplot.line(**axis_arguments)
+        plot_widget =  ds[var].where(ds[var] != 9.96921e36).hvplot.line(**axis_arguments)
     return plot_widget
         
         
