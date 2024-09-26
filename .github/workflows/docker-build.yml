@@ -20,13 +20,13 @@ jobs:
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Build the ncprocess Docker image
-      run: docker build -f docker/api -t epinux/ncprocess:${{ github.sha }} .
+      run: docker build -f docker/api/dockerfile -t epinux/ncprocess:${{ github.sha }} .
 
     - name: Push the ncprocess Docker image
       run: docker push epinux/ncprocess:${{ github.sha }}
 
     - name: Build the hvplot Docker image
-      run: docker build -f docker/hvplot -t epinux/hvplot:${{ github.sha }} .
+      run: docker build -f docker/hvplot/dockerfile -t epinux/hvplot:${{ github.sha }} .
 
     - name: Push the hvplot Docker image
       run: docker push epinux/hvplot:${{ github.sha }}
