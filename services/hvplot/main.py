@@ -27,11 +27,12 @@ from utility import ModelURL, pandas_frequency_offsets, get_download_link, dict_
 from pydantic import ValidationError
 from starlette.templating import Jinja2Templates
 import json
-
+import sys
 from bokeh.models import Button, Div
 from bokeh.layouts import column, Spacer
 
 from jinja2 import Environment, FileSystemLoader
+import gc
 
 env = Environment(loader=FileSystemLoader('/hvplot/static'))
 
@@ -43,6 +44,33 @@ pn.param.ParamMethod.loading_indicator = True
 # except Exception:
 #     # phase = 1
 #     nc_url = 'https://thredds.met.no/thredds/dodsC/alertness/YOPP_supersite/obs/utqiagvik/utqiagvik_obs_timeSeriesProfile_20180701_20180930.nc'
+
+
+def on_server_loaded():
+    print("server loaded")
+    print("")
+    sys.stdout.flush()
+    
+def on_session_created(session_context):
+    print("session created")
+    print("")
+    sys.stdout.flush()
+
+def on_session_destroyed(session_context):
+    print("session destroyed")
+    print("")
+    print(dir(session_context))
+    try:
+        del ds
+        gc.collect()
+    except UnboundLocalError:
+        pass
+    sys.stdout.flush()
+    
+    
+pn.state.onload(callback=on_server_loaded)
+# pn.state.on_session_created(callback=on_session_created)
+pn.state.on_session_destroyed(callback=on_session_destroyed)
 
 
 nc_url = None
@@ -61,7 +89,7 @@ except TypeError:
     valid_url = False
 
 error_log = Div(text=f"""<br><br> Can't load dataset from {nc_url} """)
-templates = Jinja2Templates(directory="/app/templates")
+templates = Jinja2Templates(directory="/hvplot/templates")
 
 def show_hide_error(event):
     """docstring"""
@@ -190,7 +218,15 @@ variables_selector = pn.widgets.Select(options=list(mapping_var_names.values()),
 
 
 def plot(var, title=None):
-    
+    try:
+        del ds
+        gc.collect()
+    except UnboundLocalError:
+        pass
+    if decoded_time:
+        ds = xr.open_dataset(str(nc_url).strip())
+    else:
+        ds = xr.open_dataset(str(nc_url).strip(), decode_times=False)
     var = var[0]
     print(f'plotting var: {var}')
     if not title:
