@@ -3,10 +3,10 @@ name: Build Docker Image
 on:
   push:
     branches:
-      - main
+      - dev
   pull_request:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
@@ -30,3 +30,4 @@ jobs:
 
     - name: Push the hvplot Docker image
       run: docker push epinux/hvplot:${{ github.sha }}
+
